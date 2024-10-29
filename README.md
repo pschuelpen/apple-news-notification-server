@@ -1,5 +1,12 @@
 # Apple Newsroom Notification Server
 
+![Logo](./Apple_ANNS_fulllogo.webp)
+
+![image](https://img.shields.io/badge/ChatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 If you want to know about the latest news from Apple this project might be for you!!
 
 This Docker container continuously monitors the RSS feed of the Apple Newsroom, meticulously analyzing any changes as they occur. By leveraging the capabilities of ChatGPT, it provides you with instant news notifications, ensuring you stay informed with the content that matters most to you. Whether it's new hardware, important announcements, or ryour favorite show, this system prioritizes the information you care about, delivering it directly to you in a concise and user-friendly format.

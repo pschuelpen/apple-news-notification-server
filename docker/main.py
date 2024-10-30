@@ -39,12 +39,12 @@ def formatMessage(entry):
 ####
 # Send message to the ntfy.sh server
 
-def sendMessage(message):
+def sendMessage(title, message, emoji):
    
     headers = {
-            'Title': MESSAGE_TITLE,
+            'Title': f"Apple News - {title}",
             'Priority': NTFY_PRIORITY,
-            'Tags': NTFY_EMOJI
+            'Tags': emoji
     }
     
     try:
@@ -80,7 +80,17 @@ def create_ai_summary(message):
         messages=[
             {
                 "role": "system",
-                "content": "You have to summarize this message in a small format such that this message can be sent as a notification. Keep it short and categorize if it is relevant to me based on my Priorities. Please always answer in a json formal string. Meaning you have to return a json object with the key 'type_match' and 'summary' where type will be true or false and summary will be the summarized message."
+                "content": """
+                You have to summarize this message in a small format such that this message can be sent as a notification. 
+                Keep it short and categorize if it is relevant to me based on my Priorities. Please always answer in a json formal string. 
+                Meaning you have to return a json object with the key 'type_match', 'short_title' and 'summary' where type will be true or false, short_title a very short title for the notification and summary will be the summarized message.
+
+                And to top it all of you have control over the emoji with the key 'emoji' that will be used for the notification. 
+                You have the options of 'technologist' (Person in front of PC), 'iphone', 'computer' (for MacBooks), 
+                'desktop_computer' (for Macs), 'watch', 'clapper' (for Keynotes or WWDC), 'tv' (for Apple TV), 'headphones' (for Music)
+
+                Select the Emoji that fits the best to the message.
+                """
             },
             {"role": "user", "content": message}
         ],
@@ -97,7 +107,7 @@ def create_ai_summary(message):
         print("Response content is not a valid JSON format")
         exit()
 
-    return bool(data['type_match']), data['summary']
+    return bool(data['type_match']), data["short_title"], data['summary'], data['emoji']
 
 
 
@@ -120,10 +130,6 @@ FEED_URL = 'https://www.apple.com/ca/newsroom/rss-feed.rss'
 # settings for ntfy
 NTFY_BASE_URL = 'https://ntfy.sh'
 NTFY_PRIORITY = 'default'
-NTFY_EMOJI = 'technologist'
-
-# Customize the message title
-MESSAGE_TITLE = 'Apple News'
 
 # User Agent
 USER_AGENT = 'Apple News'
@@ -166,11 +172,11 @@ while True:
             message = formatMessage(entries)
 
             # Get ChatGPT Summary and priorization
-            not_bool, summary = create_ai_summary(message)
+            not_bool, title, summary, emoji = create_ai_summary(message)
 
             # Only if that new message is relevant to user send a notification
             if not_bool:
-                sendMessage(message)
+                sendMessage(title, summary, emoji)
 
             # Add entry guid to the control variable
             control.append(entries.id)
